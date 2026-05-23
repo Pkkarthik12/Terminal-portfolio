@@ -2,7 +2,7 @@
 
 A terminal-themed personal portfolio website — pure HTML, CSS, and JavaScript. No frameworks, no build steps, no dependencies.
 
-![screenshot](assets/screenshot.png)
+
 
 ## ✨ Features
 

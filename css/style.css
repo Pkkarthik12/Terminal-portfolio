@@ -1,0 +1,289 @@
+/* ── Reset & Base ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Courier+Prime:wght@400;700&display=swap');
+
+:root {
+  --bg:          #0a0e0b;
+  --surface:     #0d1410;
+  --border:      #1f3d2a;
+  --green:       #39ff82;
+  --green-dim:   #1a7a3c;
+  --green-glow:  rgba(57, 255, 130, 0.15);
+  --yellow:      #f5e642;
+  --red:         #ff4d4d;
+  --white:       #d4f0dc;
+  --muted:       #4a7c59;
+  --font-mono:   'Courier Prime', 'Courier New', monospace;
+  --font-display:'VT323', monospace;
+  --radius:      4px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+/* ── CRT Effects ──────────────────────────────────── */
+.scanlines {
+  pointer-events: none;
+  position: fixed; inset: 0; z-index: 9999;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+}
+
+.crt-flicker {
+  pointer-events: none;
+  position: fixed; inset: 0; z-index: 9998;
+  animation: flicker 8s infinite;
+  background: transparent;
+}
+
+@keyframes flicker {
+  0%,100%  { opacity: 1; }
+  92%      { opacity: 1; }
+  92.5%    { opacity: 0.85; }
+  93%      { opacity: 1; }
+  97%      { opacity: 1; }
+  97.3%    { opacity: 0.9; }
+  97.6%    { opacity: 1; }
+}
+
+/* ── Layout ───────────────────────────────────────── */
+#app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.terminal-window {
+  width: 100%;
+  max-width: 820px;
+  height: 90vh;
+  max-height: 680px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 0 0 1px var(--green-dim),
+    0 0 40px rgba(57,255,130,0.07),
+    inset 0 0 80px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+/* ── Title Bar ────────────────────────────────────── */
+.title-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #0c1610;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+
+.traffic-lights { display: flex; gap: 6px; }
+.dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+.dot.red    { background: #ff5f57; }
+.dot.yellow { background: #febc2e; }
+.dot.green  { background: #28c840; }
+
+.title-bar-text {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* ── Terminal Body ────────────────────────────────── */
+.terminal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.terminal-body::-webkit-scrollbar { width: 4px; }
+.terminal-body::-webkit-scrollbar-track { background: transparent; }
+.terminal-body::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 2px; }
+
+/* ── Boot Sequence ────────────────────────────────── */
+.boot-sequence { margin-bottom: 16px; }
+
+.boot-line {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  opacity: 0;
+  animation: fadein 0.3s forwards;
+}
+
+.boot-line:nth-child(1) { animation-delay: 0.1s; }
+.boot-line:nth-child(2) { animation-delay: 0.5s; }
+.boot-line:nth-child(3) { animation-delay: 0.9s; }
+.boot-line:nth-child(4) { animation-delay: 1.2s; }
+.boot-line:nth-child(5) { animation-delay: 1.6s; }
+
+.boot-welcome {
+  color: var(--green);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.ok { color: var(--green); font-weight: bold; }
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Output Area ──────────────────────────────────── */
+#output-area { flex: 1; }
+
+.output-block {
+  margin-bottom: 14px;
+  animation: fadein 0.15s forwards;
+}
+
+.echoed-cmd {
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.echoed-cmd .prompt-echo { color: var(--green); }
+
+.output-content {
+  color: var(--white);
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+
+.output-content a {
+  color: var(--yellow);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.output-content a:hover { color: var(--green); }
+
+.output-error { color: var(--red); }
+
+.section-header {
+  color: var(--green);
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 12px var(--green);
+  margin-bottom: 4px;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--green-glow);
+  border: 1px solid var(--green-dim);
+  color: var(--green);
+  font-size: 12px;
+  padding: 1px 7px;
+  border-radius: 3px;
+  margin: 2px 3px 2px 0;
+}
+
+.tag.yellow { border-color: #7a7300; color: var(--yellow); background: rgba(245,230,66,0.08); }
+.tag.red    { border-color: #7a2020; color: var(--red); background: rgba(255,77,77,0.08); }
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 10px 0;
+}
+
+.ascii-art {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--green);
+  text-shadow: 0 0 10px var(--green);
+  line-height: 1.25;
+  white-space: pre;
+}
+
+kbd {
+  background: #1a2e1f;
+  border: 1px solid var(--green-dim);
+  border-radius: 3px;
+  padding: 0 5px;
+  font-size: 12px;
+  color: var(--green);
+  font-family: var(--font-mono);
+}
+
+/* ── Input Row ────────────────────────────────────── */
+.input-row {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.prompt {
+  color: var(--green);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+#cmd-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  caret-color: transparent;
+}
+
+.cursor-block {
+  display: inline-block;
+  width: 9px;
+  height: 16px;
+  background: var(--green);
+  opacity: 0.9;
+  animation: blink 1s step-end infinite;
+  margin-left: 1px;
+  flex-shrink: 0;
+}
+
+@keyframes blink {
+  0%,100% { opacity: 0.9; }
+  50%     { opacity: 0; }
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 600px) {
+  .terminal-window { height: 95vh; max-height: none; border-radius: 0; }
+  #app { padding: 0; }
+  .ascii-art { font-size: 14px; }
+  .section-header { font-size: 18px; }
+}

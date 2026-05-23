@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>dev.portfolio — terminal</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="crt-flicker"></div>
+
+  <div id="app">
+    <div class="terminal-window">
+      <div class="title-bar">
+        <div class="traffic-lights">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <span class="title-bar-text">guest@portfolio:~</span>
+      </div>
+
+      <div class="terminal-body" id="terminal-body">
+        <div class="boot-sequence" id="boot-sequence">
+          <p class="boot-line">Initializing portfolio OS v2.0.1...</p>
+          <p class="boot-line">Loading modules: <span class="ok">[OK]</span></p>
+          <p class="boot-line">Mounting filesystem: <span class="ok">[OK]</span></p>
+          <p class="boot-line">Starting services: <span class="ok">[OK]</span></p>
+          <p class="boot-line boot-welcome">Welcome, guest. Type <kbd>help</kbd> to see available commands.</p>
+        </div>
+
+        <div id="output-area"></div>
+
+        <div class="input-row" id="input-row">
+          <span class="prompt">guest@portfolio:~$&nbsp;</span>
+          <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus />
+          <span class="cursor-block"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/commands.js"></script>
+  <script src="js/terminal.js"></script>
+</body>
+</html>
